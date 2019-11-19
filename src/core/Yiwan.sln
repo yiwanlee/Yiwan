@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yiwan.UtilitiesCore", "Yiwan.UtilitiesCore\Yiwan.UtilitiesCore.csproj", "{B9F3D5EC-67A2-4B57-B0B0-94C0F9A4952E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yiwan.ThirdApiCore", "Yiwan.ThirdApiCore\Yiwan.ThirdApiCore.csproj", "{4B237FA9-1DF7-4D34-845B-E31AF8F12DD7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9F3D5EC-67A2-4B57-B0B0-94C0F9A4952E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9F3D5EC-67A2-4B57-B0B0-94C0F9A4952E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9F3D5EC-67A2-4B57-B0B0-94C0F9A4952E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9F3D5EC-67A2-4B57-B0B0-94C0F9A4952E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B237FA9-1DF7-4D34-845B-E31AF8F12DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B237FA9-1DF7-4D34-845B-E31AF8F12DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B237FA9-1DF7-4D34-845B-E31AF8F12DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B237FA9-1DF7-4D34-845B-E31AF8F12DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50C44134-68B4-4C4C-A719-69F459A4B555}
+	EndGlobalSection
+EndGlobal
