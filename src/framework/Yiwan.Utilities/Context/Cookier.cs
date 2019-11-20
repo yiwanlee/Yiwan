@@ -154,8 +154,8 @@ namespace Yiwan.Utilities
         /// </summary>
         private static string Convert2Json<T>(T value)
         {
-            if (value is null) return "";
-            else return value is string ? value.ToString() : JsonConvert.SerializeObject(value);
+            string result = value is string ? value.ToString() : JsonConvert.SerializeObject(value);
+            return result;
         }
 
         /// <summary>
