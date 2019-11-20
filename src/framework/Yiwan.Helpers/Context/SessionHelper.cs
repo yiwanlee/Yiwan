@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Yiwan.Utilities
@@ -15,7 +11,7 @@ namespace Yiwan.Utilities
     /// 3、Remove(string key)删除Session
     /// 4、Clear()清空Session
     /// </summary>
-    public static class Sessioner
+    public class Sessioner
     {
         /// <summary>
         /// 删除一个指定的Session
@@ -24,7 +20,10 @@ namespace Yiwan.Utilities
         public static void Remove(string name, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             context.Session.Remove(name);
         }
@@ -35,7 +34,10 @@ namespace Yiwan.Utilities
         public static void RemoveAll(HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             context.Session.Clear();
         }
@@ -55,10 +57,19 @@ namespace Yiwan.Utilities
         public static string Get(string key, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return string.Empty;
+            if (context == null)
+            {
+                return string.Empty;
+            }
 
-            if (context.Session[key] != null) return context.Session[key].ToString();
-            else return string.Empty;
+            if (context.Session[key] != null)
+            {
+                return context.Session[key].ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -68,10 +79,19 @@ namespace Yiwan.Utilities
         public static T Get<T>(string key, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return default;
+            if (context == null)
+            {
+                return default;
+            }
 
-            if (context.Session[key] != null) return Convert2Object<T>(context.Session[key].ToString());
-            else return default;
+            if (context.Session[key] != null)
+            {
+                return Convert2Object<T>(context.Session[key].ToString());
+            }
+            else
+            {
+                return default;
+            }
         }
 
         /// <summary>
@@ -82,7 +102,10 @@ namespace Yiwan.Utilities
         public static void Set(string key, string value, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             context.Session.Remove(key);
             context.Session.Add(key, value);
@@ -96,7 +119,10 @@ namespace Yiwan.Utilities
         public static void Set<T>(string key, T value, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             context.Session.Remove(key);
             context.Session.Add(key, Convert2Json(value));
@@ -111,7 +137,10 @@ namespace Yiwan.Utilities
         public static void Set(string key, string value, int timeout, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             Set(key, value, context);
             context.Session.Timeout = timeout;
@@ -126,7 +155,10 @@ namespace Yiwan.Utilities
         public static void Set<T>(string key, T value, int timeout, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             Set(key, value, context);
             context.Session.Timeout = timeout;
@@ -139,7 +171,10 @@ namespace Yiwan.Utilities
         public static void SetTimeout(int timeout, HttpContext context = null)
         {
             context = context ?? HttpContext.Current;
-            if (context == null) return;
+            if (context == null)
+            {
+                return;
+            }
 
             context.Session.Timeout = timeout;
         }
@@ -159,7 +194,10 @@ namespace Yiwan.Utilities
         /// </summary>
         private static T Convert2Object<T>(string value)
         {
-            if (string.IsNullOrWhiteSpace(value)) return default;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return default;
+            }
             else if (typeof(T).Name.Equals(typeof(string).Name, StringComparison.CurrentCulture))
             {
                 return JsonConvert.DeserializeObject<T>($"'{value}'");
