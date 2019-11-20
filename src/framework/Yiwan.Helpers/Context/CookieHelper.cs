@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Web;
 
-namespace Yiwan.Utilities
+namespace Yiwan.Helpers.Context
 {
     /// <summary>
     /// Cookie操作类(Cookie的增删查改) By @yiwanlee liley@foxmail.com 秋秋:897250000
@@ -12,7 +12,7 @@ namespace Yiwan.Utilities
     /// 3、Remove(string key)删除Cookie
     /// 4、Clear()清空Cookie
     /// </summary>
-    public static class Cookier
+    public static class CookieHelper
     {
         /// <summary>
         /// 删除一个指定的Cookie

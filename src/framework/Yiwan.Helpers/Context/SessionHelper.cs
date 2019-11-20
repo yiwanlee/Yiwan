@@ -2,7 +2,7 @@
 using System;
 using System.Web;
 
-namespace Yiwan.Utilities
+namespace Yiwan.Helpers.Context
 {
     /// <summary>
     /// Session操作类(Session的增删查改) By @yiwanlee liley@foxmail.com 秋秋:897250000
@@ -11,7 +11,7 @@ namespace Yiwan.Utilities
     /// 3、Remove(string key)删除Session
     /// 4、Clear()清空Session
     /// </summary>
-    public class Sessioner
+    public static class SessionHelper
     {
         /// <summary>
         /// 删除一个指定的Session
