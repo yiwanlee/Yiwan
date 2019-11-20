@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Utilities
 {
-    public class JsonUtility
+    public static class JsonUtility
     {
         /// <summary>
         /// 序列化Object对象为Json字符串
         /// </summary>
         public static string ConvertToJson<T>(T value)
         {
-            string result = value is string ? value.ToString() : JsonConvert.SerializeObject(value);
-            return result;
+            if (value == null) return null;
+            else return value is string ? value.ToString() : JsonConvert.SerializeObject(value);
         }
 
         /// <summary>

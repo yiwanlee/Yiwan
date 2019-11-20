@@ -91,7 +91,7 @@ namespace Yiwan.Utilities
             if (context == null) return default;
 
             HttpCookie cookie = Get(key, context);
-            if (cookie != null) return Convert2Object<T>(cookie.Value);
+            if (cookie != null) return Helpers.Utilities.JsonUtility.ConvertToObject<T>(cookie.Value);
             else return default;
         }
 
@@ -124,7 +124,7 @@ namespace Yiwan.Utilities
         /// <param name="expires">过期时间 DateTime</param>
         public static void Set<T>(string key, T value, DateTime? expires, HttpContext context = null)
         {
-            Set(key, Convert2Json(value), expires, context);
+            Set(key, Helpers.Utilities.JsonUtility.ConvertToJson(value), expires, context);
         }
 
         /// <summary>
@@ -145,31 +145,7 @@ namespace Yiwan.Utilities
         /// <param name="value">Cookie的键</param>
         public static void Set<T>(string key, T value, HttpContext context = null)
         {
-            Set(key, Convert2Json(value), null, context);
+            Set(key, Helpers.Utilities.JsonUtility.ConvertToJson(value), null, context);
         }
-
-        #region 内部私有函数
-        /// <summary>
-        /// 序列化对象为Json字符串
-        /// </summary>
-        private static string Convert2Json<T>(T value)
-        {
-            if (value is null) return "";
-            else return value is string ? value.ToString() : JsonConvert.SerializeObject(value);
-        }
-
-        /// <summary>
-        /// 反序列化Json字符串为Object对象
-        /// </summary>
-        private static T Convert2Object<T>(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value)) return default;
-            else if (typeof(T).Name.Equals(typeof(string).Name, StringComparison.CurrentCulture))
-            {
-                return JsonConvert.DeserializeObject<T>($"'{value}'");
-            }
-            return JsonConvert.DeserializeObject<T>(value);
-        }
-        #endregion 内部私有函数
     }
 }
