@@ -1,8 +1,5 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -20,7 +17,7 @@ namespace Yiwan.Helpers.Cache
         public bool SetAdd<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return Do(db => db.SetAdd(key, Convert2Json(value), flags));
+            return Do(db => db.SetAdd(key, Utilities.JsonUtility.ConvertToJson(value), flags));
         }
 
         /// <summary>
@@ -31,7 +28,7 @@ namespace Yiwan.Helpers.Cache
         public bool SetRemove<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return Do(db => db.SetRemove(key, Convert2Json(value), flags));
+            return Do(db => db.SetRemove(key, Utilities.JsonUtility.ConvertToJson(value), flags));
         }
 
         /// <summary>
@@ -43,8 +40,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                var values = db.SetMembers(key, flags);
-                return Convert2List<T>(values);
+                RedisValue[] values = db.SetMembers(key, flags);
+                return Utilities.JsonUtility.ConvertToList<T>(values);
             });
         }
 
@@ -71,7 +68,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> SetAddAsync<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.SetAddAsync(key, Convert2Json(value), flags));
+            return await Do(db => db.SetAddAsync(key, Utilities.JsonUtility.ConvertToJson(value), flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -82,7 +79,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> SetRemoveAsync<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.SetRemoveAsync(key, Convert2Json(value), flags));
+            return await Do(db => db.SetRemoveAsync(key, Utilities.JsonUtility.ConvertToJson(value), flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -92,8 +89,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<List<T>> SetMembersAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            var values = await Do(db => db.SetMembersAsync(key, flags));
-            return Convert2List<T>(values);
+            RedisValue[] values = await Do(db => db.SetMembersAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToList<T>(values);
         }
 
         /// <summary>
@@ -103,7 +100,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> SetLengthAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.SetLengthAsync(key, flags));
+            return await Do(db => db.SetLengthAsync(key, flags)).ConfigureAwait(false);
         }
 
         #endregion 异步方法

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Web;
 
@@ -26,7 +25,7 @@ namespace Yiwan.Helpers.Context
             HttpCookie cookie = context.Request.Cookies[key];
             if (cookie != null)
             {
-                CultureInfo cti = CultureInfo.CurrentCulture;
+                CultureInfo cti = CultureInfo.InvariantCulture;
                 cookie.Expires = DateTime.Parse("1900-01-01", cti.DateTimeFormat);
                 context.Response.Cookies.Add(cookie);
             }

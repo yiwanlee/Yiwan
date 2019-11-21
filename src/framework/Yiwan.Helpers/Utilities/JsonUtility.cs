@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Utilities
 {
@@ -25,10 +23,53 @@ namespace Yiwan.Helpers.Utilities
         {
             if (string.IsNullOrWhiteSpace(value)) return default;
             else if (typeof(T).Name.Equals(typeof(string).Name, StringComparison.CurrentCulture))
-            {
                 return JsonConvert.DeserializeObject<T>($"'{value}'");
+            else return JsonConvert.DeserializeObject<T>(value);
+        }
+
+        /// <summary>
+        /// 反序列化Json字符串为Object对象（用于RedisHelper）
+        /// </summary>
+        public static T ConvertToObject<T>(RedisValue value)
+        {
+            if (value.IsNull) return default;
+            else if (typeof(T).Name.Equals(typeof(string).Name, StringComparison.CurrentCulture))
+                return JsonConvert.DeserializeObject<T>($"'{value}'");
+            else return JsonConvert.DeserializeObject<T>(value);
+        }
+
+        /// <summary>
+        /// 反序列化Json字符串集合为Object集合
+        /// </summary>
+        public static List<T> ConvertToList<T>(string[] values)
+        {
+            List<T> result = new List<T>();
+
+            if (values == null || values.Length == 0) return result;
+
+            foreach (string item in values)
+            {
+                T model = ConvertToObject<T>(item);
+                result.Add(model);
             }
-            return JsonConvert.DeserializeObject<T>(value);
+            return result;
+        }
+
+        /// <summary>
+        /// 反序列化Json字符串集合为Object集合（用于RedisHelper）
+        /// </summary>
+        public static List<T> ConvertToList<T>(RedisValue[] values)
+        {
+            List<T> result = new List<T>();
+
+            if (values == null || values.Length == 0) return result;
+
+            foreach (RedisValue item in values)
+            {
+                T model = ConvertToObject<T>(item);
+                result.Add(model);
+            }
+            return result;
         }
     }
 }

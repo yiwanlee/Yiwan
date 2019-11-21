@@ -58,6 +58,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -71,10 +77,12 @@
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.PerformanceCounter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.PerformanceCounter.4.5.0\lib\net461\System.Diagnostics.PerformanceCounter.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
       <Private>True</Private>
@@ -120,17 +128,43 @@
     <Compile Include="Context\SessionHelper.cs" />
     <Compile Include="Entities\JsonResult.cs" />
     <Compile Include="Exceptions\RedisCacheException.cs" />
+    <Compile Include="Extensions\DatabaseExtentsion.cs" />
+    <Compile Include="Extensions\StringExtentsion.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Http\BaseBll\HttpHelperBll.cs" />
+    <Compile Include="Http\Base\HttphelperBase.cs" />
+    <Compile Include="Http\Enum\AType.cs" />
+    <Compile Include="Http\Enum\PostDataType.cs" />
+    <Compile Include="Http\Enum\ResultCookieType.cs" />
+    <Compile Include="Http\Enum\ResultType.cs" />
+    <Compile Include="Http\Helper\Base64Helper.cs" />
+    <Compile Include="Http\Helper\EncodingHelper.cs" />
+    <Compile Include="Http\Helper\ExecJsHelper.cs" />
+    <Compile Include="Http\Helper\HtmlHelper.cs" />
+    <Compile Include="Http\Helper\HttpCookieHelper.cs" />
+    <Compile Include="Http\Helper\HttpUrlHelper.cs" />
+    <Compile Include="Http\Helper\ImageHelper.cs" />
+    <Compile Include="Http\Helper\MD5Helper.cs" />
+    <Compile Include="Http\HttpHelper.cs" />
+    <Compile Include="Http\HttpItem.cs" />
+    <Compile Include="Http\HttpResult.cs" />
+    <Compile Include="Http\Item\AItem.cs" />
+    <Compile Include="Http\Item\ImgItem.cs" />
+    <Compile Include="Http\Static\RegexString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\HashEncode.cs" />
+    <Compile Include="Security\MD5Helper.cs" />
+    <Compile Include="Security\MySecurity.cs" />
+    <Compile Include="Security\RSACryption.cs" />
+    <Compile Include="Security\Security.cs" />
     <Compile Include="Utilities\JsonUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />

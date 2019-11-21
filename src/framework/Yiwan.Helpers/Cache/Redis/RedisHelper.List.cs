@@ -1,8 +1,5 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -21,7 +18,7 @@ namespace Yiwan.Helpers.Cache
         public void ListRemove<T>(string key, T value, long count = 0, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            Do(db => db.ListRemove(key, Convert2Json(value), count, flags));
+            Do(db => db.ListRemove(key, Utilities.JsonUtility.ConvertToJson(value), count, flags));
         }
 
         /// <summary>
@@ -35,8 +32,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(redis =>
             {
-                var values = redis.ListRange(key, start, stop, flags);
-                return Convert2List<T>(values);
+                RedisValue[] values = redis.ListRange(key, start, stop, flags);
+                return Utilities.JsonUtility.ConvertToList<T>(values);
             });
         }
 
@@ -48,7 +45,7 @@ namespace Yiwan.Helpers.Cache
         public void ListRightPush<T>(string key, T value, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            Do(db => db.ListRightPush(key, Convert2Json(value), when, flags));
+            Do(db => db.ListRightPush(key, Utilities.JsonUtility.ConvertToJson(value), when, flags));
         }
 
         /// <summary>
@@ -61,8 +58,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                var value = db.ListRightPop(key, flags);
-                return Convert2Object<T>(value);
+                RedisValue value = db.ListRightPop(key, flags);
+                return Utilities.JsonUtility.ConvertToObject<T>(value);
             });
         }
 
@@ -75,7 +72,7 @@ namespace Yiwan.Helpers.Cache
         public void ListLeftPush<T>(string key, T value, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            Do(db => db.ListLeftPush(key, Convert2Json(value), when, flags));
+            Do(db => db.ListLeftPush(key, Utilities.JsonUtility.ConvertToJson(value), when, flags));
         }
 
         /// <summary>
@@ -88,8 +85,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                var value = db.ListLeftPop(key, flags);
-                return Convert2Object<T>(value);
+                RedisValue value = db.ListLeftPop(key, flags);
+                return Utilities.JsonUtility.ConvertToObject<T>(value);
             });
         }
 
@@ -116,7 +113,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> ListRemoveAsync<T>(string key, T value, long count = 0, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.ListRemoveAsync(key, Convert2Json(value), count, flags));
+            return await Do(db => db.ListRemoveAsync(key, Utilities.JsonUtility.ConvertToJson(value), count, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -128,8 +125,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<List<T>> ListRangeAsync<T>(string key, long start = 0, long stop = -1, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            var values = await Do(redis => redis.ListRangeAsync(key, start, stop, flags));
-            return Convert2List<T>(values);
+            RedisValue[] values = await Do(redis => redis.ListRangeAsync(key, start, stop, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToList<T>(values);
         }
 
         /// <summary>
@@ -140,7 +137,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> ListRightPushAsync<T>(string key, T value, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.ListRightPushAsync(key, Convert2Json(value), when, flags));
+            return await Do(db => db.ListRightPushAsync(key, Utilities.JsonUtility.ConvertToJson(value), when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -151,8 +148,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<T> ListRightPopAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            var value = await Do(db => db.ListRightPopAsync(key, flags));
-            return Convert2Object<T>(value);
+            RedisValue value = await Do(db => db.ListRightPopAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToObject<T>(value);
         }
 
         /// <summary>
@@ -164,7 +161,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> ListLeftPushAsync<T>(string key, T value, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.ListLeftPushAsync(key, Convert2Json(value), when, flags));
+            return await Do(db => db.ListLeftPushAsync(key, Utilities.JsonUtility.ConvertToJson(value), when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -175,8 +172,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<T> ListLeftPopAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            var value = await Do(db => db.ListLeftPopAsync(key, flags));
-            return Convert2Object<T>(value);
+            RedisValue value = await Do(db => db.ListLeftPopAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToObject<T>(value);
         }
 
         /// <summary>
@@ -186,7 +183,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> ListLengthAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(redis => redis.ListLengthAsync(key, flags));
+            return await Do(redis => redis.ListLengthAsync(key, flags)).ConfigureAwait(false);
         }
 
         #endregion 异步方法

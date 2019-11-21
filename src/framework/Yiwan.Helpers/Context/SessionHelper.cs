@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Web;
+﻿using System.Web;
 
 namespace Yiwan.Helpers.Context
 {
@@ -86,7 +84,7 @@ namespace Yiwan.Helpers.Context
 
             if (context.Session[key] != null)
             {
-                return Convert2Object<T>(context.Session[key].ToString());
+                return Utilities.JsonUtility.ConvertToObject<T>(context.Session[key].ToString());
             }
             else
             {
@@ -125,7 +123,7 @@ namespace Yiwan.Helpers.Context
             }
 
             context.Session.Remove(key);
-            context.Session.Add(key, Convert2Json(value));
+            context.Session.Add(key, Utilities.JsonUtility.ConvertToJson(value));
         }
 
         /// <summary>
@@ -178,32 +176,5 @@ namespace Yiwan.Helpers.Context
 
             context.Session.Timeout = timeout;
         }
-
-        #region 内部私有函数
-        /// <summary>
-        /// 序列化对象为Json字符串
-        /// </summary>
-        private static string Convert2Json<T>(T value)
-        {
-            string result = value is string ? value.ToString() : JsonConvert.SerializeObject(value);
-            return result;
-        }
-
-        /// <summary>
-        /// 反序列化Json字符串为Object对象
-        /// </summary>
-        private static T Convert2Object<T>(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return default;
-            }
-            else if (typeof(T).Name.Equals(typeof(string).Name, StringComparison.CurrentCulture))
-            {
-                return JsonConvert.DeserializeObject<T>($"'{value}'");
-            }
-            return JsonConvert.DeserializeObject<T>(value);
-        }
-        #endregion 内部私有函数
     }
 }

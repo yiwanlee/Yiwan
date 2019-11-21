@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
 {
@@ -16,9 +11,14 @@ namespace Yiwan.Helpers.Cache
     /// </summary>
     public partial class RedisHelper
     {
+        /// <summary>
+        /// 数据库序号，从0开始
+        /// </summary>
         public int DbNum { get; }
+
         private readonly ConnectionMultiplexer _conn;
-        private string PrefixKey { get; set; }
+
+        private string PrefixKey { get; set; } //KEY的前缀
 
         #region 构造函数
 
@@ -29,8 +29,9 @@ namespace Yiwan.Helpers.Cache
                 string.IsNullOrWhiteSpace(readWriteHosts) ?
                 RedisConnectionHelper.Instance :
                 RedisConnectionHelper.GetConnectionMultiplexer(readWriteHosts);
-        }
 
+            if (_conn == null) throw new RedisConnectionException(ConnectionFailureType.None, "Connection为空，请检查链接字符串，或检查是否全局执行RedisConnectionHelper.Initialize");
+        }
         #endregion 构造函数
 
         #region 发布订阅
@@ -66,7 +67,7 @@ namespace Yiwan.Helpers.Cache
         public long Publish<T>(string channel, T msg)
         {
             ISubscriber sub = _conn.GetSubscriber();
-            return sub.Publish(channel, Convert2Json(msg));
+            return sub.Publish(channel, Utilities.JsonUtility.ConvertToJson(msg));
         }
 
         /// <summary>
@@ -116,7 +117,6 @@ namespace Yiwan.Helpers.Cache
         /// <summary>
         /// 设置前缀
         /// </summary>
-        /// <param name="customKey"></param>
         public void SetPrefixKey(string prefixKey)
         {
             PrefixKey = prefixKey;
@@ -132,7 +132,7 @@ namespace Yiwan.Helpers.Cache
         /// <param name="oldKey">添加前缀之前的Key</param>
         private string AddPrefixKey(string oldKey)
         {
-            var prefixKey = PrefixKey ?? RedisConnectionHelper.PrefixKey;
+            string prefixKey = PrefixKey ?? RedisConnectionHelper.PrefixKey;
             return prefixKey + oldKey;
         }
 
@@ -140,7 +140,7 @@ namespace Yiwan.Helpers.Cache
         {
             try
             {
-                var database = _conn.GetDatabase(DbNum);
+                IDatabase database = _conn.GetDatabase(DbNum);
                 return func(database);
             }
             catch (Exception ex)
@@ -148,45 +148,6 @@ namespace Yiwan.Helpers.Cache
                 Console.WriteLine(ex.Message);
                 return default;
             }
-        }
-
-        /// <summary>
-        /// 序列化对象为Json字符串
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private string Convert2Json<T>(T value)
-        {
-            string result = value is string ? value.ToString() : JsonConvert.SerializeObject(value);
-            return result;
-        }
-
-        /// <summary>
-        /// 反序列化Json字符串为Object对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private T Convert2Object<T>(RedisValue value)
-        {
-            if (value.IsNull) return default;
-            if (typeof(T).Name.Equals(typeof(string).Name))
-            {
-                return JsonConvert.DeserializeObject<T>($"'{value}'");
-            }
-            return JsonConvert.DeserializeObject<T>(value);
-        }
-
-        private List<T> Convert2List<T>(RedisValue[] values)
-        {
-            List<T> result = new List<T>();
-            foreach (var item in values)
-            {
-                var model = Convert2Object<T>(item);
-                result.Add(model);
-            }
-            return result;
         }
 
         #endregion 辅助方法

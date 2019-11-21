@@ -1,11 +1,6 @@
 ﻿using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
 {
@@ -17,12 +12,12 @@ namespace Yiwan.Helpers.Cache
     /// </summary>
     public static class RedisConnectionHelper
     {
-        private static readonly object lockOjbect = new object(); // 执行锁        
+        private static readonly object lockOjbect = new object(); // 执行锁      
         private static string RedisConnectionString; // 格式例 127.0.0.1:6379,password=123,allowadmin=true
         private static ConnectionMultiplexer _instance;
         private static readonly ConcurrentDictionary<string, ConnectionMultiplexer> ConnectionCache = new ConcurrentDictionary<string, ConnectionMultiplexer>();
 
-        public static string PrefixKey { get; set; }; // 自定义Key的前缀，每个Key都会自动增加此前缀
+        public static string PrefixKey { get; set; } // 自定义Key的前缀，每个Key都会自动增加此前缀
 
         public static void Initialize(string redisHosts, string prefixKey = null)
         {
@@ -74,17 +69,17 @@ namespace Yiwan.Helpers.Cache
         {
             connectionString = connectionString ?? RedisConnectionString;
 
-            var config = new ConfigurationOptions
+            ConfigurationOptions config = new ConfigurationOptions
             {
                 AbortOnConnectFail = false,
                 AllowAdmin = true,
-                ConnectTimeout = 2000,
-                SyncTimeout = 2000,
+                ConnectTimeout = 2500,
+                SyncTimeout = 2500,
                 Password = connectionString.Split(',')[1].Split('=')[1],//Redis数据库密码
                 EndPoints = { connectionString.Split(',')[0] }// connectionString 为IP:Port 如”192.168.2.110:6379”
             };
 
-            var connect = ConnectionMultiplexer.Connect(config);
+            ConnectionMultiplexer connect = ConnectionMultiplexer.Connect(config);
 
             //注册如下事件
             connect.ConnectionFailed += MuxerConnectionFailed;

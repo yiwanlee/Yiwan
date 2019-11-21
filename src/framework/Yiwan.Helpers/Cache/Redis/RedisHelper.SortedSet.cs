@@ -1,8 +1,5 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -20,7 +17,7 @@ namespace Yiwan.Helpers.Cache
         public bool SortedSetAdd<T>(string key, T value, double score, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return Do(redis => redis.SortedSetAdd(key, Convert2Json<T>(value), score, when, flags));
+            return Do(redis => redis.SortedSetAdd(key, Utilities.JsonUtility.ConvertToJson<T>(value), score, when, flags));
         }
 
         /// <summary>
@@ -31,7 +28,7 @@ namespace Yiwan.Helpers.Cache
         public bool SortedSetRemove<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return Do(redis => redis.SortedSetRemove(key, Convert2Json(value), flags));
+            return Do(redis => redis.SortedSetRemove(key, Utilities.JsonUtility.ConvertToJson(value), flags));
         }
 
         /// <summary>
@@ -47,8 +44,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(redis =>
             {
-                var values = redis.SortedSetRangeByRank(key, start, stop, order, flags);
-                return Convert2List<T>(values);
+                RedisValue[] values = redis.SortedSetRangeByRank(key, start, stop, order, flags);
+                return Utilities.JsonUtility.ConvertToList<T>(values);
             });
         }
 
@@ -78,7 +75,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> SortedSetAddAsync<T>(string key, T value, double score, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(redis => redis.SortedSetAddAsync(key, Convert2Json<T>(value), score, when, flags));
+            return await Do(redis => redis.SortedSetAddAsync(key, Utilities.JsonUtility.ConvertToJson<T>(value), score, when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -89,7 +86,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> SortedSetRemoveAsync<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(redis => redis.SortedSetRemoveAsync(key, Convert2Json(value), flags));
+            return await Do(redis => redis.SortedSetRemoveAsync(key, Utilities.JsonUtility.ConvertToJson(value), flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -103,8 +100,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<List<T>> SortedSetRangeByRankAsync<T>(string key, long start = 0, long stop = -1, Order order = Order.Ascending, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            var values = await Do(redis => redis.SortedSetRangeByRankAsync(key, start, stop, order, flags));
-            return Convert2List<T>(values);
+            RedisValue[] values = await Do(redis => redis.SortedSetRangeByRankAsync(key, start, stop, order, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToList<T>(values);
         }
 
         /// <summary>
@@ -118,7 +115,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> SortedSetLengthAsync(string key, double min = double.NegativeInfinity, double max = double.PositiveInfinity, Exclude exclude = Exclude.None, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(redis => redis.SortedSetLengthAsync(key, min, max, exclude, flags));
+            return await Do(redis => redis.SortedSetLengthAsync(key, min, max, exclude, flags)).ConfigureAwait(false);
         }
 
         #endregion 异步方法

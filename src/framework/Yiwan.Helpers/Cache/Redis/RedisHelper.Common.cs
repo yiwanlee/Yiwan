@@ -1,9 +1,6 @@
 ﻿using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -27,7 +24,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> KeyExistsAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.KeyExistsAsync(key, flags));
+            return await Do(db => db.KeyExistsAsync(key, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -49,7 +46,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> KeyRenameAsync(string key, string newKey, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.KeyRenameAsync(key, newKey, when, flags));
+            return await Do(db => db.KeyRenameAsync(key, newKey, when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,7 +68,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> KeyExpireAsync(string key, TimeSpan? expiry, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.KeyExpireAsync(key, expiry, flags));
+            return await Do(db => db.KeyExpireAsync(key, expiry, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -91,7 +88,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> KeyDeleteAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.KeyDeleteAsync(key, flags));
+            return await Do(db => db.KeyDeleteAsync(key, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,8 +110,8 @@ namespace Yiwan.Helpers.Cache
             EndPoint[] endPoints = _conn.GetEndPoints();
             if (endPoints.Length > 0)
             {
-                var serv = _conn.GetServer(endPoints[0]);
-                await serv.FlushDatabaseAsync(database, flags);
+                IServer serv = _conn.GetServer(endPoints[0]);
+                await serv.FlushDatabaseAsync(database, flags).ConfigureAwait(false);
             }
         }
 
@@ -133,7 +130,7 @@ namespace Yiwan.Helpers.Cache
         public async void FlushAllDatabasesAsync(CommandFlags flags = CommandFlags.None)
         {
             EndPoint[] endPoints = _conn.GetEndPoints();
-            if (endPoints.Length > 0) await _conn.GetServer(endPoints[0]).FlushAllDatabasesAsync(flags);
+            if (endPoints.Length > 0) await _conn.GetServer(endPoints[0]).FlushAllDatabasesAsync(flags).ConfigureAwait(false);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -21,7 +20,7 @@ namespace Yiwan.Helpers.Cache
         public bool StringSet<T>(string key, T value, TimeSpan? expiry = null, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string json = Convert2Json(value);
+            string json = Utilities.JsonUtility.ConvertToJson(value);
             return Do(db => db.StringSet(key, json, expiry, when, flags));
         }
 
@@ -55,7 +54,7 @@ namespace Yiwan.Helpers.Cache
         public T StringGet<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return Do(db => Convert2Object<T>(db.StringGet(key, flags)));
+            return Do(db => Utilities.JsonUtility.ConvertToObject<T>(db.StringGet(key, flags)));
         }
 
         /// <summary>
@@ -114,8 +113,8 @@ namespace Yiwan.Helpers.Cache
         public T StringGetSet<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string json = Convert2Json(value);
-            return Do(db => Convert2Object<T>(db.StringGetSet(key, json, flags)));
+            string json = Utilities.JsonUtility.ConvertToJson(value);
+            return Do(db => Utilities.JsonUtility.ConvertToObject<T>(db.StringGetSet(key, json, flags)));
         }
 
         /// <summary>
@@ -142,8 +141,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> StringSetAsync<T>(string key, T value, TimeSpan? expiry = null, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string json = Convert2Json(value);
-            return await Do(db => db.StringSetAsync(key, json, expiry, when, flags));
+            string json = Utilities.JsonUtility.ConvertToJson(value);
+            return await Do(db => db.StringSetAsync(key, json, expiry, when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -154,7 +153,7 @@ namespace Yiwan.Helpers.Cache
         {
             List<KeyValuePair<RedisKey, RedisValue>> newkeyValues =
                 keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(AddPrefixKey(p.Key), p.Value)).ToList();
-            return await Do(db => db.StringSetAsync(newkeyValues.ToArray(), when, flags));
+            return await Do(db => db.StringSetAsync(newkeyValues.ToArray(), when, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -165,8 +164,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<T> StringGetAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string result = await Do(db => db.StringGetAsync(key, flags));
-            return Convert2Object<T>(result);
+            string result = await Do(db => db.StringGetAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToObject<T>(result);
         }
 
         /// <summary>
@@ -176,7 +175,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<RedisValue[]> StringGetAsync(List<string> keys, CommandFlags flags = CommandFlags.None)
         {
             RedisKey[] newKeys = keys.Select(AddPrefixKey).ToList().Select(redisKey => (RedisKey)redisKey).ToArray();
-            return await Do(db => db.StringGetAsync(newKeys, flags));
+            return await Do(db => db.StringGetAsync(newKeys, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<double> StringIncrementAsync(string key, double value = 1, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.StringIncrementAsync(key, value, flags));
+            return await Do(db => db.StringIncrementAsync(key, value, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -200,7 +199,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<double> StringDecrementAsync(string key, double value = -1, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.StringDecrementAsync(key, value, flags));
+            return await Do(db => db.StringDecrementAsync(key, value, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -212,7 +211,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> StringAppendAsync(string key, string value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.StringAppendAsync(key, value, flags));
+            return await Do(db => db.StringAppendAsync(key, value, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -225,9 +224,9 @@ namespace Yiwan.Helpers.Cache
         public async Task<T> StringGetSetAsync<T>(string key, T value, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string json = Convert2Json(value);
-            RedisValue result = await Do(db => db.StringGetSetAsync(key, json, flags));
-            return Convert2Object<T>(result);
+            string json = Utilities.JsonUtility.ConvertToJson(value);
+            RedisValue result = await Do(db => db.StringGetSetAsync(key, json, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToObject<T>(result);
         }
 
         /// <summary>
@@ -237,7 +236,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> StringLengthAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.StringLengthAsync(key, flags));
+            return await Do(db => db.StringLengthAsync(key, flags)).ConfigureAwait(false);
         }
 
         #endregion 异步方法

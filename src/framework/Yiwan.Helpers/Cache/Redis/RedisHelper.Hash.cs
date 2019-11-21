@@ -1,8 +1,6 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Yiwan.Helpers.Cache
@@ -44,7 +42,7 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                string json = Convert2Json(value);
+                string json = Utilities.JsonUtility.ConvertToJson(value);
                 return db.HashSet(key, dataKey, json, when, flags);
             });
         }
@@ -58,14 +56,17 @@ namespace Yiwan.Helpers.Cache
         /// <param name="value">Hash属性的值</param>
         public void HashSet(string key, List<KeyValuePair<string, object>> listEntry, CommandFlags flags = CommandFlags.None)
         {
-            key = AddPrefixKey(key);
+            if (listEntry == null || listEntry.Count == 0) return;
 
-            var db = _conn.GetDatabase(DbNum);
+            key = AddPrefixKey(key);
+            IDatabase db = _conn.GetDatabase(DbNum);
+
             List<HashEntry> entrys = new List<HashEntry>();
             foreach (KeyValuePair<string, object> item in listEntry)
             {
-                entrys.Add(new HashEntry(item.Key, Convert2Json(item.Value)));
+                entrys.Add(new HashEntry(item.Key, Utilities.JsonUtility.ConvertToJson(item.Value)));
             }
+
             db.HashSet(key, entrys.ToArray(), flags);
         }
 
@@ -103,7 +104,7 @@ namespace Yiwan.Helpers.Cache
             return Do(db =>
             {
                 string value = db.HashGet(key, dataKey, flags);
-                return Convert2Object<T>(value);
+                return Utilities.JsonUtility.ConvertToObject<T>(value);
             });
         }
 
@@ -143,7 +144,7 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                return db.HashKeys(key, flags).Select(redisKey => Convert2Object<T>(redisKey)).ToList();
+                return db.HashKeys(key, flags).Select(redisKey => Utilities.JsonUtility.ConvertToObject<T>(redisKey)).ToList();
             });
         }
 
@@ -157,7 +158,7 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return Do(db =>
             {
-                return db.HashValues(key, flags).Select(redisValue => Convert2Object<T>(redisValue)).ToList();
+                return db.HashValues(key, flags).Select(redisValue => Utilities.JsonUtility.ConvertToObject<T>(redisValue)).ToList();
             });
         }
 
@@ -173,7 +174,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> HashExistsAsync(string key, string dataKey, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashExistsAsync(key, dataKey, flags));
+            return await Do(db => db.HashExistsAsync(key, dataKey, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> HashLengthAsync(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashLengthAsync(key, flags));
+            return await Do(db => db.HashLengthAsync(key, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -198,8 +199,8 @@ namespace Yiwan.Helpers.Cache
             key = AddPrefixKey(key);
             return await Do(db =>
             {
-                string json = Convert2Json(value);
-                return db.HashSetAsync(key, dataKey, json, when, flags);
+                string json = Utilities.JsonUtility.ConvertToJson(value);
+                return db.HashSetAsync(key, dataKey, json, when, flags).ConfigureAwait(false);
             });
         }
 
@@ -211,7 +212,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<bool> HashDeleteAsync(string key, string dataKey, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashDeleteAsync(key, dataKey, flags));
+            return await Do(db => db.HashDeleteAsync(key, dataKey, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -222,7 +223,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<long> HashDeleteAsync(string key, List<RedisValue> dataKeys, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashDeleteAsync(key, dataKeys.ToArray(), flags));
+            return await Do(db => db.HashDeleteAsync(key, dataKeys.ToArray(), flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -234,8 +235,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<T> HashGetAsync<T>(string key, string dataKey, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            string value = await Do(db => db.HashGetAsync(key, dataKey, flags));
-            return Convert2Object<T>(value);
+            string value = await Do(db => db.HashGetAsync(key, dataKey, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToObject<T>(value);
         }
 
         /// <summary>
@@ -248,7 +249,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<double> HashIncrementAsync(string key, string dataKey, double value = 1, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashIncrementAsync(key, dataKey, value, flags));
+            return await Do(db => db.HashIncrementAsync(key, dataKey, value, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -261,7 +262,7 @@ namespace Yiwan.Helpers.Cache
         public async Task<double> HashDecrementAsync(string key, string dataKey, double value = 1, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            return await Do(db => db.HashDecrementAsync(key, dataKey, value, flags));
+            return await Do(db => db.HashDecrementAsync(key, dataKey, value, flags)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -272,8 +273,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<List<T>> HashKeysAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            RedisValue[] keys = await Do(db => db.HashKeysAsync(key, flags));
-            return Convert2List<T>(keys);
+            RedisValue[] keys = await Do(db => db.HashKeysAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToList<T>(keys);
         }
 
         /// <summary>
@@ -284,8 +285,8 @@ namespace Yiwan.Helpers.Cache
         public async Task<List<T>> HashValuesAsync<T>(string key, CommandFlags flags = CommandFlags.None)
         {
             key = AddPrefixKey(key);
-            RedisValue[] values = await Do(db => db.HashValuesAsync(key, flags));
-            return Convert2List<T>(values);
+            RedisValue[] values = await Do(db => db.HashValuesAsync(key, flags)).ConfigureAwait(false);
+            return Utilities.JsonUtility.ConvertToList<T>(values);
         }
 
         #endregion 异步方法
