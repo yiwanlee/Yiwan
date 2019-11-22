@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Yiwan.Helpers.Security;
+using Yiwan.Helpers.Extensions;
 
 namespace Yiwan.TestOnCS
 {
@@ -44,7 +45,8 @@ namespace Yiwan.TestOnCS
             Console.WriteLine("\r\nHashHelper测试 ▲▲▲▲▲");
 
             var aesStr = Helpers.Security.SymmetricHelper.AesEncrypt(key, null);
-            Console.WriteLine($"AES加密结果：{aesStr}");
+            Console.WriteLine($"AES加密结果：{aesStr.ToBase64UrlSafe()}");
+            Console.WriteLine($"AES加密结果：{aesStr.ToBase64UrlUnSafe()}");
             Console.WriteLine($"AES解密结果：{Helpers.Security.SymmetricHelper.AesDecrypt(aesStr, null)}");
 
             var desStr = Helpers.Security.SymmetricHelper.DESEncrypt(key, null);
@@ -64,6 +66,12 @@ namespace Yiwan.TestOnCS
             Console.WriteLine($"TDE解密结果：{Helpers.Security.SymmetricHelper.TripleDESDecrypt(tdesStr, null)}");
             #endregion HashHelper测试 ▲▲▲▲▲
 
+            string origPath = AppContext.BaseDirectory + "/测试1.txt";
+            string savePath = AppContext.BaseDirectory + "/测试2.txt";
+            string decrPath = AppContext.BaseDirectory + "/测试3.txt";
+
+            Helpers.Security.SymmetricHelper.TripleDESEncryptFile(origPath, savePath, null);
+            Helpers.Security.SymmetricHelper.TripleDESDecryptFile(savePath, decrPath, null);
 
 
 

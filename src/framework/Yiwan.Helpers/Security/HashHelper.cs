@@ -4,6 +4,7 @@
 /// </summary>
 
 using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -17,7 +18,7 @@ namespace Yiwan.Helpers.Security
         /// <summary>
         /// Hash加密的基础算法
         /// </summary>
-        public static byte[] BaseForBytes(HashAlgorithm hashAlg, string txt, Encoding encoding = null)
+        internal static byte[] BaseForBytes(HashAlgorithm hashAlg, string txt, Encoding encoding = null)
         {
             if (hashAlg == null) return null;
             if (encoding == null) encoding = Encoding.Default;
@@ -147,6 +148,81 @@ namespace Yiwan.Helpers.Security
         {
             byte[] newBuffer = SHA512ForBytes(txt, encoding);
             return BitConverter.ToString(newBuffer).Replace("-", "");
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        internal static bool IsMatch(HashAlgorithm hashAlg, string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            string hashedTextToCompare = BitConverter.ToString(BaseForBytes(hashAlg, unhashedText, encoding)).Replace("-", "");
+            return string.Compare(hashedText, hashedTextToCompare, false, CultureInfo.InvariantCulture) == 0;
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool MD5IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                return IsMatch(md5, hashedText, unhashedText, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool MD160IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (RIPEMD160 md160 = RIPEMD160.Create())
+            {
+                return IsMatch(md160, hashedText, unhashedText, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool SHA1IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (SHA1 sha1 = System.Security.Cryptography.SHA1.Create())
+            {
+                return IsMatch(sha1, hashedText, unhashedText, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool SHA256IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (SHA256 sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                return IsMatch(sha256, hashedText, unhashedText, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool SHA384IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (SHA384 sha384 = System.Security.Cryptography.SHA384.Create())
+            {
+                return IsMatch(sha384, hashedText, unhashedText, encoding);
+            }
+        }
+
+        /// <summary>
+        /// 确定是否一致
+        /// </summary>
+        public static bool SHA512IsMatch(string hashedText, string unhashedText, Encoding encoding = null)
+        {
+            using (SHA512 sha512 = System.Security.Cryptography.SHA512.Create())
+            {
+                return IsMatch(sha512, hashedText, unhashedText, encoding);
+            }
         }
     }
 }

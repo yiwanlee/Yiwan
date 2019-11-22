@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using Yiwan.Helpers.Extensions;
 
 namespace Yiwan.Helpers.Security
 {
@@ -12,17 +13,6 @@ namespace Yiwan.Helpers.Security
     /// </summary>
     public static class SymmetricHelper
     {
-        internal static byte[] Subbytes(this byte[] bytes, int index, int length)
-        {
-            if (bytes == null) return null;
-            byte[] newBytes = new byte[length];
-            for (int i = 0; i < length; i++)
-            {
-                if (bytes.Length > index + i) newBytes[i] = bytes[index + i];
-            }
-            return newBytes;
-        }
-
         /// <summary>
         /// 基础对称加密算法，可解密，支持AES、DES、RC2、Rijndael、TripleDESC
         /// </summary>
@@ -36,7 +26,7 @@ namespace Yiwan.Helpers.Security
             CipherMode cipherMode, PaddingMode paddingMode, Encoding encoding = null)
         {
             if (algorithm == null) return string.Empty;
-            if (string.IsNullOrWhiteSpace(key)) key = "@yiwanlee";
+            if (string.IsNullOrWhiteSpace(key)) key = "yiwanlee|liley@foxmail.com";
 
             byte[] plainBytes;
             byte[] cipherBytes;
@@ -72,6 +62,60 @@ namespace Yiwan.Helpers.Security
         }
 
         /// <summary>
+        /// 基础对称加密算法，加密文件，可解密，支持AES、DES、RC2、Rijndael、TripleDESC
+        /// </summary>
+        /// <param name="algorithm">对应算法</param>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        internal static bool BaseEncrypt(SymmetricAlgorithm algorithm, string origPath, string savePath, string key,
+            CipherMode cipherMode, PaddingMode paddingMode, Encoding encoding = null)
+        {
+            if (algorithm == null) return false;
+            if (string.IsNullOrWhiteSpace(key)) key = "yiwanlee|liley@foxmail.com";
+
+            byte[] origBytes;
+            byte[] cipherBytes;
+            algorithm.Key = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
+            algorithm.IV = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
+            algorithm.Mode = cipherMode;
+            algorithm.Padding = paddingMode;
+
+            using (FileStream fs = File.OpenRead(origPath))
+            {
+                origBytes = new byte[fs.Length];
+                fs.Read(origBytes, 0, (int)fs.Length);
+            }
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // 定义用于加密转换的流
+                CryptoStream cs = new CryptoStream(ms, algorithm.CreateEncryptor(), CryptoStreamMode.Write);
+                // 写入加密后的序列
+                cs.Write(origBytes, 0, origBytes.Length);
+                cs.FlushFinalBlock();
+                // 关闭当前流并释放任何资源
+                cs.Close();
+                // 将加密的消息保存到一个字节数组中
+                cipherBytes = ms.ToArray();
+                // 关闭memorystream对象
+                ms.Close();
+            }
+
+            using (FileStream fs = File.OpenWrite(savePath))
+            {
+                foreach (byte b in cipherBytes)
+                {
+                    fs.WriteByte(b);
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 基础对称解密算法，支持AES、DES、RC2、Rijndael、TripleDESC
         /// </summary>
         /// <param name="algorithm">对应算法</param>
@@ -84,7 +128,7 @@ namespace Yiwan.Helpers.Security
             CipherMode cipherMode, PaddingMode paddingMode, Encoding encoding = null)
         {
             if (algorithm == null) return string.Empty;
-            if (string.IsNullOrWhiteSpace(key)) key = "@yiwanlee";
+            if (string.IsNullOrWhiteSpace(key)) key = "yiwanlee|liley@foxmail.com";
 
             byte[] plainBytes;
             // 将base64字符串转换为字节数组。
@@ -112,6 +156,56 @@ namespace Yiwan.Helpers.Security
             }
 
             return recoveredMessage;
+        }
+
+        /// <summary>
+        /// 基础对称解密算法，解密文件，支持AES、DES、RC2、Rijndael、TripleDESC
+        /// </summary>
+        /// <param name="algorithm">对应算法</param>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        internal static bool BaseDecrypt(SymmetricAlgorithm algorithm, string origPath, string savePath, string key,
+            CipherMode cipherMode, PaddingMode paddingMode, Encoding encoding = null)
+        {
+            if (algorithm == null) return false;
+            if (string.IsNullOrWhiteSpace(key)) key = "yiwanlee|liley@foxmail.com";
+
+            byte[] plainBytes;
+            byte[] cipherBytes;
+
+            using (FileStream fs = File.OpenRead(origPath))
+            {
+                cipherBytes = new byte[fs.Length];
+                fs.Read(cipherBytes, 0, (int)fs.Length);
+            }
+
+            algorithm.Key = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
+            algorithm.IV = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
+            algorithm.Mode = cipherMode;
+            algorithm.Padding = paddingMode;
+
+            using (MemoryStream memoryStream = new MemoryStream(cipherBytes))
+            {
+                using (CryptoStream cs = new CryptoStream(memoryStream,
+                    algorithm.CreateDecryptor(), CryptoStreamMode.Read))
+                {
+                    plainBytes = new byte[cipherBytes.Length];
+                    cs.Read(plainBytes, 0, cipherBytes.Length);
+                }
+            }
+
+            using (FileStream fs = File.OpenWrite(savePath))
+            {
+                foreach (byte b in plainBytes)
+                {
+                    fs.WriteByte(b);
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -145,6 +239,42 @@ namespace Yiwan.Helpers.Security
             using (Aes aes = Aes.Create())
             {
                 return BaseDecrypt(aes, base64Text, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// Aes对称算法 加密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        public static bool AesEncryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (Aes aes = Aes.Create())
+            {
+                return BaseEncrypt(aes, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// Aes对称算法 解密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        public static bool AesDecryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (Aes aes = Aes.Create())
+            {
+                return BaseDecrypt(aes, origPath, savePath, key, cipherMode, paddingMode, encoding);
             }
         }
 
@@ -183,6 +313,42 @@ namespace Yiwan.Helpers.Security
         }
 
         /// <summary>
+        /// DES对称算法 加密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        public static bool DESEncryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (DES des = DES.Create())
+            {
+                return BaseEncrypt(des, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// DES对称算法 解密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        public static bool DESDecryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (DES des = DES.Create())
+            {
+                return BaseDecrypt(des, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
         /// RC2对称算法 加密
         /// </summary>
         /// <param name="plainText">明文</param>
@@ -213,6 +379,42 @@ namespace Yiwan.Helpers.Security
             using (RC2 rc2 = RC2.Create())
             {
                 return BaseDecrypt(rc2, base64Text, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// RC2对称算法 加密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        public static bool RC2EncryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (RC2 rc2 = RC2.Create())
+            {
+                return BaseEncrypt(rc2, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// DES对称算法 解密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        public static bool RC2DecryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (RC2 rc2 = RC2.Create())
+            {
+                return BaseDecrypt(rc2, origPath, savePath, key, cipherMode, paddingMode, encoding);
             }
         }
 
@@ -251,6 +453,42 @@ namespace Yiwan.Helpers.Security
         }
 
         /// <summary>
+        /// Rijndael对称算法 加密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        public static bool RijndaelEncryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (Rijndael rj = Rijndael.Create())
+            {
+                return BaseEncrypt(rj, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// Rijndael对称算法 解密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        public static bool RijndaelDecryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (Rijndael rj = Rijndael.Create())
+            {
+                return BaseDecrypt(rj, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
         /// TripleDES对称算法 加密
         /// </summary>
         /// <param name="plainText">明文</param>
@@ -281,6 +519,42 @@ namespace Yiwan.Helpers.Security
             using (TripleDES tdes = TripleDES.Create())
             {
                 return BaseDecrypt(tdes, base64Text, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// TripleDES对称算法 加密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回加密文件结果</returns>
+        public static bool TripleDESEncryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (TripleDES tdes = TripleDES.Create())
+            {
+                return BaseEncrypt(tdes, origPath, savePath, key, cipherMode, paddingMode, encoding);
+            }
+        }
+
+        /// <summary>
+        /// TripleDES对称算法 解密文件
+        /// </summary>
+        /// <param name="origPath">原始文件路径</param>
+        /// <param name="savePath">保存文件路径</param>
+        /// <param name="key">用于加解密的Key</param>
+        /// <param name="cipherMode">密码模式</param>
+        /// <param name="paddingMode">填充模式</param>
+        /// <returns>返回解密文件结果</returns>
+        public static bool TripleDESDecryptFile(string origPath, string savePath, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7, Encoding encoding = null)
+        {
+            using (TripleDES tdes = TripleDES.Create())
+            {
+                return BaseDecrypt(tdes, origPath, savePath, key, cipherMode, paddingMode, encoding);
             }
         }
     }

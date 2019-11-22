@@ -128,6 +128,7 @@
     <Compile Include="Context\SessionHelper.cs" />
     <Compile Include="Entities\JsonResult.cs" />
     <Compile Include="Exceptions\RedisCacheException.cs" />
+    <Compile Include="Extensions\ByteExtentsion.cs" />
     <Compile Include="Extensions\DatabaseExtentsion.cs" />
     <Compile Include="Extensions\StringExtentsion.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -152,14 +153,8 @@
     <Compile Include="Http\Item\ImgItem.cs" />
     <Compile Include="Http\Static\RegexString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\AesHelper.cs" />
     <Compile Include="Security\AsymmetricHelper.cs" />
-    <Compile Include="Security\DesRsaHelper.cs" />
-    <Compile Include="Security\HashEncode.cs" />
     <Compile Include="Security\HashHelper.cs" />
-    <Compile Include="Security\MySecurity.cs" />
-    <Compile Include="Security\RSACryption.cs" />
-    <Compile Include="Security\Security.cs" />
     <Compile Include="Security\SymmetricHelper.cs" />
     <Compile Include="Utilities\JsonUtility.cs" />
   </ItemGroup>
