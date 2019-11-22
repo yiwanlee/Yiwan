@@ -152,8 +152,10 @@
     <Compile Include="Http\Item\ImgItem.cs" />
     <Compile Include="Http\Static\RegexString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AesHelper.cs" />
+    <Compile Include="Security\DesRsaHelper.cs" />
     <Compile Include="Security\HashEncode.cs" />
-    <Compile Include="Security\MD5Helper.cs" />
+    <Compile Include="Security\HashHelper.cs" />
     <Compile Include="Security\MySecurity.cs" />
     <Compile Include="Security\RSACryption.cs" />
     <Compile Include="Security\Security.cs" />

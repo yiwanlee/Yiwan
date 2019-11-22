@@ -17,3 +17,9 @@ dotnet_diagnostic.CA1054.severity = none
 
 # CA2234: 传递系统 URI 对象而不是字符串
 dotnet_diagnostic.CA2234.severity = none
+
+# CA1308: 将字符串规范化为大写
+dotnet_diagnostic.CA1308.severity = none
+
+# CA5351: 不要使用损坏的加密算法
+dotnet_diagnostic.CA5351.severity = none

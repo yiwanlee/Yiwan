@@ -78,10 +78,10 @@ namespace Yiwan.Helpers.Http
                 {
                     if (Header != null && Header.Count > 0)
                     {
-                        if (Header.AllKeys.Any(k => k.ToLower(CultureInfo.InvariantCulture).Contains("location")))
+                        if (Header.AllKeys.Any(k => k.ToLowerInvariant().Contains("location")))
                         {
                             string baseurl = Header["location"].ToString(CultureInfo.InvariantCulture).Trim();
-                            string locationurl = baseurl.ToLower(CultureInfo.InvariantCulture);
+                            string locationurl = baseurl.ToLowerInvariant();
                             if (!string.IsNullOrWhiteSpace(locationurl))
                             {
                                 bool b = locationurl.StartsWith("http://", StringComparison.CurrentCulture) || locationurl.StartsWith("https://", StringComparison.CurrentCulture);

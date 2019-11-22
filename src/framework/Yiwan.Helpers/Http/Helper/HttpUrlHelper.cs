@@ -11,7 +11,7 @@ namespace Yiwan.Helpers.Http.Helper
     /// <summary>
     /// 和Url相关的帮助方法  Copyright：http://www.httphelper.com/
     /// </summary>
-    internal class HttpUrlHelper
+    internal static class HttpUrlHelper
     {
         /// <summary>
         /// 使用指定的编码对象将 URL 编码的字符串转换为已解码的字符串。
@@ -90,7 +90,7 @@ namespace Yiwan.Helpers.Http.Helper
         /// </summary>
         /// <param name="selectNO">1完整url,2域名之后,3域名之后不含参数,4只有域名,5获取参数</param>
         /// <returns></returns>
-        public string getNowURL(int selectNO)
+        public static string getNowURL(int selectNO)
         {
             string strURL = "";
             switch (selectNO)

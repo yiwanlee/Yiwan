@@ -79,7 +79,7 @@ namespace Yiwan.Helpers.Http.Base
             {
                 result.Html = ex.Message;
             }
-            if (item.IsToLower) result.Html = result.Html.ToLower(CultureInfo.InvariantCulture);
+            if (item.IsToLower) result.Html = result.Html.ToLowerInvariant();
             //重置request，response为空
             if (item.IsReset)
             {
@@ -135,7 +135,7 @@ namespace Yiwan.Helpers.Http.Base
             {
                 result.Html = ex.Message;
             }
-            if (item.IsToLower) result.Html = result.Html.ToLower(CultureInfo.InvariantCulture);
+            if (item.IsToLower) result.Html = result.Html.ToLowerInvariant();
             return result;
         }
         #endregion
@@ -236,7 +236,7 @@ namespace Yiwan.Helpers.Http.Base
                 string c = string.Empty;
                 if (meta != null && meta.Groups.Count > 0)
                 {
-                    c = meta.Groups[1].Value.ToLower(CultureInfo.InvariantCulture).Trim();
+                    c = meta.Groups[1].Value.ToLowerInvariant().Trim();
                 }
                 string cs = string.Empty;
                 if (!string.IsNullOrWhiteSpace(response.CharacterSet))
@@ -450,7 +450,7 @@ namespace Yiwan.Helpers.Http.Base
         private void SetPostData(HttpItem item)
         {
             //验证在得到结果时是否有传入数据
-            if (!request.Method.Trim().ToLower(CultureInfo.InvariantCulture).Contains("get"))
+            if (!request.Method.Trim().ToLowerInvariant().Contains("get"))
             {
                 if (item.PostEncoding != null)
                 {
@@ -493,7 +493,7 @@ namespace Yiwan.Helpers.Http.Base
             bool isIeProxy = false;
             if (!string.IsNullOrWhiteSpace(item.ProxyIp))
             {
-                isIeProxy = item.ProxyIp.ToLower(CultureInfo.InvariantCulture).Contains("ieproxy");
+                isIeProxy = item.ProxyIp.ToLowerInvariant().Contains("ieproxy");
             }
             if (!string.IsNullOrWhiteSpace(item.ProxyIp) && !isIeProxy)
             {

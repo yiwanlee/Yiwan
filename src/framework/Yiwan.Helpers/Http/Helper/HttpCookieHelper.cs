@@ -29,7 +29,7 @@ namespace Yiwan.Helpers.Http.Helper
             string[] list = strcookie.ToString(CultureInfo.InvariantCulture).Split(new string[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string item in list)
             {
-                string itemcookie = item.ToLower(CultureInfo.InvariantCulture).Trim().Replace("\r\n", string.Empty).Replace("\n", string.Empty);
+                string itemcookie = item.ToLowerInvariant().Trim().Replace("\r\n", string.Empty).Replace("\n", string.Empty);
                 //排除空字符串
                 if (string.IsNullOrWhiteSpace(itemcookie)) continue;
                 //排除不存在=号的Cookie项
