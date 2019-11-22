@@ -40,8 +40,8 @@ namespace Yiwan.Helpers.Security
 
             byte[] plainBytes;
             byte[] cipherBytes;
-            algorithm.Key = HashHelper.SHA256Hash(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
-            algorithm.IV = HashHelper.SHA256Hash(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
+            algorithm.Key = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
+            algorithm.IV = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
             algorithm.Mode = cipherMode;
             algorithm.Padding = paddingMode;
 
@@ -89,8 +89,8 @@ namespace Yiwan.Helpers.Security
             byte[] plainBytes;
             // 将base64字符串转换为字节数组。
             byte[] cipherBytes = Convert.FromBase64String(base64Text);
-            algorithm.Key = HashHelper.SHA256Hash(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
-            algorithm.IV = HashHelper.SHA256Hash(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
+            algorithm.Key = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.Key.Length) + 1, algorithm.Key.Length);
+            algorithm.IV = HashHelper.SHA256ForBytes(key, encoding).Subbytes((key.Length % algorithm.IV.Length) + 1, algorithm.IV.Length);
             algorithm.Mode = cipherMode;
             algorithm.Padding = paddingMode;
 
