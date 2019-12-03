@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenPbCore", "GenPbCore\GenPbCore.csproj", "{D8736A76-75FA-4F8B-AF08-E417A65B1F40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenPbFrame", "GenPbFrame\GenPbFrame.csproj", "{6937A9BC-1A57-4B05-A64C-2EC5D628BDC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8736A76-75FA-4F8B-AF08-E417A65B1F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8736A76-75FA-4F8B-AF08-E417A65B1F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8736A76-75FA-4F8B-AF08-E417A65B1F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8736A76-75FA-4F8B-AF08-E417A65B1F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6937A9BC-1A57-4B05-A64C-2EC5D628BDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6937A9BC-1A57-4B05-A64C-2EC5D628BDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6937A9BC-1A57-4B05-A64C-2EC5D628BDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6937A9BC-1A57-4B05-A64C-2EC5D628BDC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {728C0737-739E-49D7-AA39-BA1685387BA9}
+	EndGlobalSection
+EndGlobal
