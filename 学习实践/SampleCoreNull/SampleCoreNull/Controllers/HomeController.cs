@@ -15,8 +15,9 @@ namespace SampleCoreNull.Controllers
             var list = new List<Employee>();
             for (int i = 0; i < 10; i++) list.Add(employee);
 
-            return new OkObjectResult(new { obj = employee, list = list, name = new { title = "other", employee } });
+            //return new OkObjectResult(new { obj = employee, list = list, name = new { title = "other", employee } });
             //Content("Hello MVC! This Message Is Action With Used ContentResult");
+            return View();
         }
 
     }
