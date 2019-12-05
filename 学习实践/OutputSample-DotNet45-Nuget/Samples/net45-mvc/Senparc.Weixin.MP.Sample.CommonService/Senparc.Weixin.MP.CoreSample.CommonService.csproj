@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Version>1.0.0.0</Version>
+    <AssemblyName>Senparc.Weixin.MP.Sample.CommonService</AssemblyName>
+    <RootNamespace>Senparc.Weixin.MP.Sample.CommonService</RootNamespace>
+    <Description>此项目是 Sample.netcore 下启动项目</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Senparc.NeuChar" Version="1.0.102" />
+    <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Senparc.Weixin.MP, Version=16.9.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.16.9.104\lib\net45\Senparc.Weixin.MP.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.CO2NET, Version=1.0.103.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.CO2NET.1.0.103\lib\net45\Senparc.CO2NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.WxOpen, Version=3.7.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.WxOpen.3.7.104\lib\net45\Senparc.Weixin.WxOpen.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.Open, Version=4.7.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.Open.4.7.104\lib\net45\Senparc.Weixin.Open.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.Work, Version=3.7.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.Work.3.7.104\lib\net45\Senparc.Weixin.Work.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.MP.MvcExtension, Version=7.4.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.Mvc.7.4.104\lib\net45\Senparc.Weixin.MP.MvcExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.Cache.Memcached, Version=2.5.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.Cache.Memcached.2.5.104\lib\net45\Senparc.Weixin.Cache.Memcached.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.WebSocket, Version=0.9.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.WebSocket.0.9.104\lib\net45\Senparc.WebSocket.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.TenPay, Version=1.5.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.TenPay.1.5.104\lib\net45\Senparc.Weixin.TenPay.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.Cache.Redis, Version=2.7.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.Cache.Redis.2.7.104\lib\net45\Senparc.Weixin.Cache.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin, Version=6.6.104.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.6.6.104\lib\net45\Senparc.Weixin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

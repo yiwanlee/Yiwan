@@ -8,6 +8,7 @@ namespace GenPbCore
     {
         static void Main(string[] args)
         {
+
             if (true)
             {
                 QRCodeGenerator qrGenerator1 = new QRCodeGenerator();
