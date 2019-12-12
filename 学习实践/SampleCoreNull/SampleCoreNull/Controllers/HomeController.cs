@@ -30,7 +30,6 @@ namespace SampleCoreNull.Controllers
         [Authorize]
         public ActionResult Detail(int id)
         {
-            System.Security.Claims.ClaimTypes
             ViewBag.CtxId = _context.ContextId.ToString();
             using (CoreDbContext db = new CoreDbContext(new DbContextOptionsBuilder<CoreDbContext>(new DbContextOptions<CoreDbContext>()).UseSqlite(AppSettings.AppSetting("sqlite")).Options))
             {
