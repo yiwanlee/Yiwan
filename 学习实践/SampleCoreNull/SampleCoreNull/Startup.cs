@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +27,8 @@ namespace SampleCoreNull
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(option => option.EnableEndpointRouting = false);
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<CoreDbContext>(options => options.UseSqlite(Configuration["database:sqlite"]));
         }
 
         // 运行时将调用此方法。使用该方法来配置 HTTP 请求管道。
@@ -70,6 +73,28 @@ namespace SampleCoreNull
         {
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
             //routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}", new { controller = "Home", action = "Index" });
+
+            AppSettings.SetAppSetting(Configuration.GetSection("database"));
+        }
+    }
+
+    public class AppSettings
+    {
+        private static IConfigurationSection appSections = null;
+
+        public static string AppSetting(string key)
+        {
+            string str = "";
+            if (appSections.GetSection(key) != null)
+            {
+                str = appSections.GetSection(key).Value;
+            }
+            return str;
+        }
+
+        public static void SetAppSetting(IConfigurationSection section)
+        {
+            appSections = section;
         }
     }
 }
