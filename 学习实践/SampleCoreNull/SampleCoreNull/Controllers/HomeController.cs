@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace SampleCoreNull.Controllers
 {
+    [Authorize]
     public class HomeController : BasicController
     {
         public HomeController(CoreDbContext context) : base(context) { }
 
+
+        [AllowAnonymous]
         public ActionResult Index()
         {
             ViewBag.CtxId = _context.ContextId.ToString();
@@ -27,7 +30,6 @@ namespace SampleCoreNull.Controllers
             return View(model);
         }
 
-        [Authorize]
         public ActionResult Detail(int id)
         {
             ViewBag.CtxId = _context.ContextId.ToString();
@@ -41,9 +43,24 @@ namespace SampleCoreNull.Controllers
             }
         }
 
-        
-        public ActionResult Create()
+        [HttpGet]
+        public ViewResult Create()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(string name)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = new Employee();
+                employee.Name = name;
+
+                SQLEmployeeData sqlData = new SQLEmployeeData(_context);
+                sqlData.Add(employee);
+                return RedirectToAction("Detail", new { id = employee.ID });
+            }
             return View();
         }
     }

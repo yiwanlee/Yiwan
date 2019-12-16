@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleCoreNull.Models;
 
 namespace SampleCoreNull
 {
@@ -29,6 +31,8 @@ namespace SampleCoreNull
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddEntityFrameworkSqlite()
                 .AddDbContext<CoreDbContext>(options => options.UseSqlite(Configuration["database:sqlite"]));
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CoreDbContext>();
         }
 
         // 运行时将调用此方法。使用该方法来配置 HTTP 请求管道。
@@ -44,7 +48,7 @@ namespace SampleCoreNull
 
             app.UseFileServer();
             //app.UseMvcWithDefaultRoute();
-
+            app.UseAuthentication();
             app.UseMvc(ConfigureRoutes);
 
             //app.UseRouting();
@@ -58,13 +62,13 @@ namespace SampleCoreNull
             //    //});
             //});
 
-            app.Run(async (context) =>
-            {
-                //throw new System.Exception("Throw Exception");
+            //app.Run(async (context) =>
+            //{
+            //    //throw new System.Exception("Throw Exception");
 
-                var req = context.Request;
-                await context.Response.WriteAsync("Run Context:" + $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString.ToUriComponent()}");
-            });
+            //    var req = context.Request;
+            //    await context.Response.WriteAsync("Run Context:" + $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString.ToUriComponent()}");
+            //});
 
             //app.UseWelcomePage();
         }
