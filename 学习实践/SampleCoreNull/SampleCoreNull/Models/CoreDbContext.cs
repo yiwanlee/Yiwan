@@ -10,21 +10,10 @@ namespace SampleCoreNull
 {
     public class CoreDbContext : IdentityDbContext<User>
     {
-        public CoreDbContext()
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //var opts = new DbContextOptionsBuilder<CoreDbContext>(new DbContextOptions<CoreDbContext>()).UseSqlite(AppSettings.AppSetting("sqlite")).Options;
+            optionsBuilder.UseSqlite("Data Source=blogging.db");
         }
-
-        public CoreDbContext(DbContextOptions<CoreDbContext> options)
-            : base(options)
-        {
-
-        }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlite("Data Source=blogging.db");
-        //}
 
         public DbSet<Employee> Employee { get; set; }
     }

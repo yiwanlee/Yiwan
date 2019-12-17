@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,10 +30,30 @@ namespace SampleCoreNull
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(option => option.EnableEndpointRouting = false);
-            services.AddEntityFrameworkSqlite()
-                .AddDbContext<CoreDbContext>(options => options.UseSqlite(Configuration["database:sqlite"]));
+            services.AddEntityFrameworkSqlite().AddDbContext<CoreDbContext>();
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CoreDbContext>();
+
+            //配置authorrize
+            //services.AddAuthentication(b =>
+            //{
+            //    b.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    b.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    b.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //}).
+            //AddCookie(b =>
+            //{
+            //    //登陆地址
+            //    b.LoginPath = "/login";
+            //    //sid
+            //    b.Cookie.Name = "My_SessionId";
+            //    // b.Cookie.Domain = "shenniu.core.com";
+            //    b.Cookie.Path = "/";
+            //    b.Cookie.HttpOnly = true;
+            //    b.Cookie.Expiration = new TimeSpan(0, 0, 30);
+
+            //    b.ExpireTimeSpan = new TimeSpan(0, 0, 30);
+            //});
         }
 
         // 运行时将调用此方法。使用该方法来配置 HTTP 请求管道。
@@ -43,12 +64,10 @@ namespace SampleCoreNull
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseDefaultFiles();
-            //app.UseStaticFiles();
-
             app.UseFileServer();
-            //app.UseMvcWithDefaultRoute();
+            
             app.UseAuthentication();
+
             app.UseMvc(ConfigureRoutes);
 
             //app.UseRouting();
@@ -78,27 +97,23 @@ namespace SampleCoreNull
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
             //routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}", new { controller = "Home", action = "Index" });
 
-            AppSettings.SetAppSetting(Configuration.GetSection("database"));
+            //AppSettings.Init(Configuration);
         }
     }
 
-    public class AppSettings
-    {
-        private static IConfigurationSection appSections = null;
+    //public class AppSettings
+    //{
+    //    private static IConfiguration Config = null;
 
-        public static string AppSetting(string key)
-        {
-            string str = "";
-            if (appSections.GetSection(key) != null)
-            {
-                str = appSections.GetSection(key).Value;
-            }
-            return str;
-        }
+    //    public static string Get(string key)
+    //    {
+    //        if (Config.GetSection(key) != null) return Config.GetSection(key).Value;
+    //        return string.Empty;
+    //    }
 
-        public static void SetAppSetting(IConfigurationSection section)
-        {
-            appSections = section;
-        }
-    }
+    //    public static void Init(IConfiguration config)
+    //    {
+    //        Config = config;
+    //    }
+    //}
 }

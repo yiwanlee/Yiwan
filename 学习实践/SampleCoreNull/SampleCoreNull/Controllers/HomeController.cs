@@ -12,35 +12,32 @@ namespace SampleCoreNull.Controllers
     [Authorize]
     public class HomeController : BasicController
     {
-        public HomeController(CoreDbContext context) : base(context) { }
-
+        protected readonly CoreDbContext db;
+        public HomeController(CoreDbContext dbContext)
+        {
+            db = dbContext;
+        }
 
         [AllowAnonymous]
         public ActionResult Index()
         {
-            ViewBag.CtxId = _context.ContextId.ToString();
+            ViewBag.CtxId = db.ContextId.ToString();
 
             var model = new HomePageViewModel();
 
-            using (CoreDbContext db = new CoreDbContext(new DbContextOptionsBuilder<CoreDbContext>(new DbContextOptions<CoreDbContext>()).UseSqlite(AppSettings.AppSetting("sqlite")).Options))
-            {
-                SQLEmployeeData sqlData = new SQLEmployeeData(db);
-                model.Employees = sqlData.GetAll();
-            }
+            SQLEmployeeData sqlData = new SQLEmployeeData(db);
+            model.Employees = sqlData.GetAll();
             return View(model);
         }
 
         public ActionResult Detail(int id)
         {
-            ViewBag.CtxId = _context.ContextId.ToString();
-            using (CoreDbContext db = new CoreDbContext(new DbContextOptionsBuilder<CoreDbContext>(new DbContextOptions<CoreDbContext>()).UseSqlite(AppSettings.AppSetting("sqlite")).Options))
-            {
-                SQLEmployeeData sqlData = new SQLEmployeeData(db);
+            ViewBag.CtxId = db.ContextId.ToString();
+            SQLEmployeeData sqlData = new SQLEmployeeData(db);
 
-                Employee employee = sqlData.Get(id);
+            Employee employee = sqlData.Get(id);
 
-                return View(employee);
-            }
+            return View(employee);
         }
 
         [HttpGet]
@@ -57,7 +54,7 @@ namespace SampleCoreNull.Controllers
                 var employee = new Employee();
                 employee.Name = name;
 
-                SQLEmployeeData sqlData = new SQLEmployeeData(_context);
+                SQLEmployeeData sqlData = new SQLEmployeeData(db);
                 sqlData.Add(employee);
                 return RedirectToAction("Detail", new { id = employee.ID });
             }

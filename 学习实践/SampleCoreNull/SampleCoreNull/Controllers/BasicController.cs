@@ -8,8 +8,6 @@ namespace SampleCoreNull.Controllers
 {
     public class BasicController : Controller
     {
-        protected readonly CoreDbContext _context;
-
-        protected BasicController(CoreDbContext context) { _context = context; }
+        
     }
 }
