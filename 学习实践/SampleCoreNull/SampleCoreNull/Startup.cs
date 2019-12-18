@@ -21,7 +21,7 @@ namespace SampleCoreNull
         public IConfiguration Configuration { get; set; }
         public Startup()
         {
-            var builder = new ConfigurationBuilder().AddJsonFile("AppSettings.json");
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
             Configuration = builder.Build();
         }
 

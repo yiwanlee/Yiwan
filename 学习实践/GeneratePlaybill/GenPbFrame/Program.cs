@@ -18,6 +18,18 @@ namespace GenPbFrame
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine("Starting Main");
+            //var s = StaticSingleton.Instance;
+            //Console.WriteLine(s.Id);
+            
+
+            StaticSingleton.Hello();
+
+
+            var s21 = StaticSingleton.Instance;
+            Console.WriteLine(s21.Id);
+
+
             if (true)
             {
 
@@ -51,25 +63,28 @@ namespace GenPbFrame
                 //        }
                 //    }
                 //}
-                string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                string b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ !~*'";
 
 
-                List<string> ls = new List<string>();
-                for (int i = 0; i < b.Length; i++)
-                {
-                    for (int j = 0; j < b.Length; j++)
-                    {
-                        for (int k = 0; k < b.Length; k++)
-                        {
-                            for (int l = 0; l < b.Length; l++)
-                            {
-                                ls.Add(b[i].ToString() + b[j].ToString() + b[k].ToString() + b[l].ToString());
-                                Console.WriteLine($"当前 " + ls.Count);
-                            }
-                        }
-                    }
-                }
+
+                //string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                //string b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ !~*'";
+
+
+                //List<string> ls = new List<string>();
+                //for (int i = 0; i < b.Length; i++)
+                //{
+                //    for (int j = 0; j < b.Length; j++)
+                //    {
+                //        for (int k = 0; k < b.Length; k++)
+                //        {
+                //            for (int l = 0; l < b.Length; l++)
+                //            {
+                //                ls.Add(b[i].ToString() + b[j].ToString() + b[k].ToString() + b[l].ToString());
+                //                Console.WriteLine($"当前 " + ls.Count);
+                //            }
+                //        }
+                //    }
+                //}
 
 
 
