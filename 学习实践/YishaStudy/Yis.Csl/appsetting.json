@@ -1,0 +1,20 @@
+{
+    "databases": [
+        {
+            "name": "Qebb",
+            "dbType": "SqlServer",
+            "connectionString": "rm-wz9u88wd79orz1z07.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework",
+            "connectionStringOnlyRead": "rm-wz9u88wd79orz1z07.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework",
+            "connectionStringOnlyWrite": "rm-wz9u88wd79orz1z07.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework",
+            "connectionStringForDev": "data source=rm-wz9u88wd79orz1z07jo.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework",
+            "connectionStringOnlyReadForDev": "data source=rm-wz9u88wd79orz1z07jo.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework",
+            "connectionStringOnlyWriteForDev": "data source=rm-wz9u88wd79orz1z07jo.sqlserver.rds.aliyuncs.com,3433;initial catalog=qebb;user id=qebbsa;password=Qebb@7288#7288;MultipleActiveResultSets=True;App=EntityFramework"
+        },
+        {
+            "name": "Qebb.Redis",
+            "dbType": "Redis",
+            "connectionString": "r-gh7odw4vigt1jbqof6g956mb4015fqj8.redis.rds.aliyuncs.com:6379,password=AwtSnQEU95CparCFxu6FWuQ7nFC7CXdd,allowAdmin=true",
+            "connectionStringForDev": "r-sqdsrp7ij1hn1ls2wjxk7hssco7qwmn8.redis.rds.aliyuncs.com:6379,password=AwtSnQEU95CparCFxu6FWuQ7nFC7CXdd,allowAdmin=true"
+        }
+    ]
+}

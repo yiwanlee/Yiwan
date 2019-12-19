@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yis.Web", "Yis.Web\Yis.Web.csproj", "{D63893B3-5C13-4D2D-BCE5-6C77AEADAC1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yis.Csl", "Yis.Csl\Yis.Csl.csproj", "{14423352-35FF-40A9-8096-D1675B014D10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D63893B3-5C13-4D2D-BCE5-6C77AEADAC1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63893B3-5C13-4D2D-BCE5-6C77AEADAC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63893B3-5C13-4D2D-BCE5-6C77AEADAC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63893B3-5C13-4D2D-BCE5-6C77AEADAC1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14423352-35FF-40A9-8096-D1675B014D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14423352-35FF-40A9-8096-D1675B014D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14423352-35FF-40A9-8096-D1675B014D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14423352-35FF-40A9-8096-D1675B014D10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7003E1F0-E477-4A9B-8A53-BF2060DEB396}
+	EndGlobalSection
+EndGlobal
