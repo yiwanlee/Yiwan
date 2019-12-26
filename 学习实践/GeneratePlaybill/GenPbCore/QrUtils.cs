@@ -26,6 +26,7 @@ namespace GenPbCore
 
         public static void Qr02()
         {
+            return;
             for (int i = 0; i < 100; i++)
             {
                 QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();

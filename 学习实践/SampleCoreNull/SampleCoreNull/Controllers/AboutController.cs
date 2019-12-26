@@ -12,6 +12,7 @@ namespace SampleCoreNull.Controllers
         [Route("")]
         public string Phone()
         {
+            
             return "+10086";
         }
 
