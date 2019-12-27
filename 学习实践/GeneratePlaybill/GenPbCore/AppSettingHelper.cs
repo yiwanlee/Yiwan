@@ -4,6 +4,8 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,15 +26,19 @@ namespace GenPbCore
         }
         static async Task LoadFileAsync()
         {
-            Console.WriteLine("文件变更，读取...");
+            Console.WriteLine($"文件变更 [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]");
             using Stream stream = _fileProvider.GetFileInfo(_file).CreateReadStream();
             byte[] buffer = new byte[stream.Length];
             await stream.ReadAsync(buffer, 0, buffer.Length);
 
-            //Encoding utf8EWithNoByteOrderMark = new UTF8Encoding(false);
-            var jsonStr = new UTF8Encoding(false).GetString(buffer);
+            if (buffer[0] == 0xEF && buffer[1] == 0xBB && buffer[2] == 0xBF)
+            {
+                var listBuffer = new List<byte>(buffer);
+                listBuffer.RemoveRange(0, 3);
+                buffer = listBuffer.ToArray();
+            }
 
-            jsonStr = jsonStr.Substring(jsonStr.IndexOf("{"));
+            var jsonStr = Encoding.UTF8.GetString(buffer);
             _settings = (JObject)JsonConvert.DeserializeObject(jsonStr);
         }
 
