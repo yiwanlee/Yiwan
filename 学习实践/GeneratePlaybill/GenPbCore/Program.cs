@@ -36,38 +36,35 @@ namespace GenPbCore
                 stopwatch.Stop();
                 Console.WriteLine($"执行总时间：{ stopwatch.ElapsedMilliseconds}毫秒");
             }
-            Console.WriteLine(AppContext.BaseDirectory + "appsettings.json");
+            //Console.WriteLine(AppContext.BaseDirectory + "appsettings.json");
             #endregion 二维码
 
 
-
-
-            var s = CheckFileProvider(@"ab");
-
-            Console.WriteLine(s);
-
-
-            while (true) Console.ReadLine();
-        }
-
-        static string CheckFileProvider(string file)
-        {
-            string path = AppContext.BaseDirectory;
-
-            Regex regexFile = new Regex(@"^(?<fpath>([a-zA-Z]:\\)([\s\.\-\w]+\\)*)(?<fname>[\w]+.[\w]+)");
-            Match matchResult = regexFile.Match(file);
-            if (matchResult.Success)
+            while (true)
             {
-                path = matchResult.Result("${fpath}");
-                file = matchResult.Result("${fname}");
+
+                var s = await JsonFileHelper.Get("DB:DBType", $"appsettings.json");
+                Console.WriteLine(s);
+
+                var s2 = await JsonFileHelper.Get<int>("DB:DBNum", $"appsettings.json");
+                Console.WriteLine(s2);
+
+                List<Student> ls = await JsonFileHelper.GetList<Student>("school:students", "appsettings.json");
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls));
+
+
+
+
+                Console.ReadLine();
             }
-
-            if (file.IndexOf('.') != -1 && !file.ToLower().EndsWith(".json")) throw new Exception($"仅支持.json文件[{file}]");
-
-            if (!file.ToLower().EndsWith(".json")) file += ".json";
-            var fileProvider = new PhysicalFileProvider(path);
-            var dir = fileProvider.Root;
-            return path + file;
         }
+        class Student
+        {
+            public string name { get; set; }
+            public int age { get; set; }
+        }
+
     }
+
+
 }
