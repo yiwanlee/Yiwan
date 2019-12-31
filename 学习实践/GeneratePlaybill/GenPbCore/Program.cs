@@ -43,19 +43,26 @@ namespace GenPbCore
             while (true)
             {
 
-                var s = await JsonFileHelper.Get("DB:DBType", $"appsettings.json");
-                Console.WriteLine(s);
+                var s1 = await JsonFileHelper.GetAsync("DB1:DBType", $"appsettings.json");
+                Console.WriteLine("1:" + s1);
 
-                var s2 = await JsonFileHelper.Get<int>("DB:DBNum", $"appsettings.json");
-                Console.WriteLine(s2);
+                var s2 = await JsonFileHelper.GetAsync<int>("DB:DBNum2", $"appsettings2.json");
+                Console.WriteLine("2:" + s2);
 
-                List<Student> ls = await JsonFileHelper.GetList<Student>("school:students", "appsettings.json");
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls));
-
-
-
-
+                List<Student> ls1 = await JsonFileHelper.GetListAsync<Student>("school:students", "appsettings2.json");
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls1));
+                Console.WriteLine("0--------------");
                 Console.ReadLine();
+
+                var s11 = JsonFileHelper.Get("DB:DBType", $"appsettings.json");
+                Console.WriteLine(s11);
+
+                var s22 = JsonFileHelper.Get<int>("DB:DBNum", $"appsettings.json");
+                Console.WriteLine(s22);
+
+                List<Student> ls11 = JsonFileHelper.GetList<Student>("school:students", "appsettings.json");
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls11));
+                Console.WriteLine("!--------------------------------------");
             }
         }
         class Student
