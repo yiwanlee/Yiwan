@@ -14,7 +14,7 @@ namespace GenPbCore
 {
     /// <summary>
     /// Json文件读写
-    /// 引用Newtonsoft.Json
+    /// <para>::引用Newtonsoft.Json</para>
     /// </summary>
     public static class JsonFileHelper
     {
@@ -59,7 +59,7 @@ namespace GenPbCore
             if (!inWatchs)
             {
                 LoadFile(fileProvider, path, file);
-                ChangeToken.OnChange(() => fileProvider.Watch(file), async () => await LoadFileAsync(fileProvider, path, file));
+                ChangeToken.OnChange(() => fileProvider.Watch(file), () => LoadFile(fileProvider, path, file));
                 watchFiles.Add(path + file);
             }
 
@@ -121,7 +121,7 @@ namespace GenPbCore
             using Stream stream = fileProvider.GetFileInfo(file).CreateReadStream();
             byte[] buffer = new byte[stream.Length];
             stream.Read(buffer, 0, buffer.Length);
-
+            Console.WriteLine("LoadFile");
             if (buffer.Length > 0)
             {
                 // 处理utf8的bom头
@@ -153,7 +153,7 @@ namespace GenPbCore
             using Stream stream = fileProvider.GetFileInfo(file).CreateReadStream();
             byte[] buffer = new byte[stream.Length];
             await stream.ReadAsync(buffer, 0, buffer.Length);
-
+            Console.WriteLine("LoadFileAsync");
             if (buffer.Length > 0)
             {
                 // 处理utf8的bom头

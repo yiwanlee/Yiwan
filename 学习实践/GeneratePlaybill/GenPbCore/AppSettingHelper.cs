@@ -12,95 +12,94 @@ using System.Threading.Tasks;
 
 namespace GenPbCore
 {
-    public class AppSettingHelper
+    /// <summary>
+    /// appsettings.json文件读写
+    /// <para>实际是调用JsonFileHelper</para>
+    /// </summary>
+    public static class AppSettingHelper
     {
-        const string _file = "appsettings.json";
-        static IFileProvider _fileProvider = null;
-        static JObject _settings = null;
+        #region 同步方法
 
-        static AppSettingHelper()
+        /// <summary>
+        /// 解析appsettings.json文件，并获取值
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>同步方法</para>
+        /// </summary>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static string Get(string key)
         {
-            Console.WriteLine("AppSettingHelper");
-            _fileProvider = new PhysicalFileProvider(AppContext.BaseDirectory);
-            ChangeToken.OnChange(() => _fileProvider.Watch(_file), async () => await LoadFileAsync());
-        }
-        static async Task LoadFileAsync()
-        {
-            Console.WriteLine($"文件变更 [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]");
-            using Stream stream = _fileProvider.GetFileInfo(_file).CreateReadStream();
-            byte[] buffer = new byte[stream.Length];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
-
-            if (buffer[0] == 0xEF && buffer[1] == 0xBB && buffer[2] == 0xBF)
-            {
-                var listBuffer = new List<byte>(buffer);
-                listBuffer.RemoveRange(0, 3);
-                buffer = listBuffer.ToArray();
-            }
-
-            var jsonStr = Encoding.UTF8.GetString(buffer);
-            _settings = (JObject)JsonConvert.DeserializeObject(jsonStr);
-        }
-
-        public static async Task<string> Get(string key)
-        {
-            if (_settings == null) await LoadFileAsync();
-            return _settings?[key].ToString();
+            return JsonFileHelper.Get(key, "appsettings.json");
         }
 
         /// <summary>
-        /// 根据节点读取Json返回实体对象
+        /// 解析appsettings.json文件，并获取值
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>同步方法</para>
         /// </summary>
-        /// <returns></returns>
-        public static string Read<T>(string section)
+        /// <typeparam name="T">返回类型，如果涉及返回List，请试用GetList</typeparam>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static T Get<T>(string key)
         {
-            return (_fileProvider == null).ToString();
-
-
-
-            try
-            {
-                byte[] buffer;
-                var fprov = new PhysicalFileProvider(AppContext.BaseDirectory);
-                using (var readStream = fprov.GetFileInfo("appsettings.json").CreateReadStream())
-                {
-                    buffer = new byte[readStream.Length];
-                    readStream.Read(buffer, 0, buffer.Length);
-                }
-                return Encoding.UTF8.GetString(buffer);
-
-                //using (var file = File.OpenText(AppContext.BaseDirectory + "appsettings.json"))
-                //{
-                //    string s = file.ReadToEnd();
-                //    var jo = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(s);
-                //    using (var reader = new JsonTextReader(file))
-                //    {
-                //        var jObj = (JObject)JObject.ReadFrom(reader, new JsonLoadSettings
-                //        {
-                //            CommentHandling = CommentHandling.Ignore,
-                //            DuplicatePropertyNameHandling = DuplicatePropertyNameHandling.Replace,
-                //            LineInfoHandling = LineInfoHandling.Ignore
-                //        });
-                //        if (!string.IsNullOrWhiteSpace(section))
-                //        {
-                //            var secJt = jObj[section];
-                //            if (secJt != null)
-                //            {
-                //                return JsonConvert.DeserializeObject<T>(secJt.ToString());
-                //            }
-                //        }
-                //        else
-                //        {
-                //            return JsonConvert.DeserializeObject<T>(jObj.ToString());
-                //        }
-                //    }
-                //}
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            //return default(T);
+            return JsonFileHelper.Get<T>(key, "appsettings.json");
         }
+
+        /// <summary>
+        /// 解析appsettings.json文件，并获取集合
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>同步方法</para>
+        /// </summary>
+        /// <typeparam name="T">返回集合元素类型</typeparam>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static List<T> GetList<T>(string key)
+        {
+            return JsonFileHelper.GetList<T>(key, "appsettings.json");
+        }
+
+        #endregion 同步方法
+
+        #region 异步方法
+
+        /// <summary>
+        /// 解析appsettings.json文件，并获取值
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>异步方法</para>
+        /// </summary>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static async Task<string> GetAsync(string key)
+        {
+            return await JsonFileHelper.GetAsync(key, "appsettings.json");
+        }
+
+        /// <summary>
+        /// 解析appsettings.json文件，并获取值
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>异步方法</para>
+        /// </summary>
+        /// <typeparam name="T">返回类型，如果涉及返回List，请试用GetList</typeparam>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static async Task<T> GetAsync<T>(string key)
+        {
+            return await JsonFileHelper.GetAsync<T>(key, "appsettings.json");
+        }
+
+        /// <summary>
+        /// 解析appsettings.json文件，并获取集合
+        /// <para>解析失败则返回default(T)</para>
+        /// <para>异步方法</para>
+        /// </summary>
+        /// <typeparam name="T">返回集合元素类型</typeparam>
+        /// <param name="key">json键，层级键值使用冒号(例 system:website:seo)</param>
+        /// <param name="file">文件路径 支持1完整路径2文件名3文件名不含扩展名；非完整路径时默认在程序根目录查找</param>
+        public static async Task<List<T>> GetListAsync<T>(string key)
+        {
+            return await JsonFileHelper.GetListAsync<T>(key, "appsettings.json");
+        }
+
+        #endregion 异步方法
     }
 }

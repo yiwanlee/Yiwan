@@ -43,26 +43,31 @@ namespace GenPbCore
             while (true)
             {
 
-                var s1 = await JsonFileHelper.GetAsync("DB1:DBType", $"appsettings.json");
-                Console.WriteLine("1:" + s1);
+                var s2 = JsonFileHelper.Get("DB:DBType", $"appsettings.json");
+                Console.WriteLine("同步Get:" + s2);
 
-                var s2 = await JsonFileHelper.GetAsync<int>("DB:DBNum2", $"appsettings2.json");
-                Console.WriteLine("2:" + s2);
+                var s1 = await JsonFileHelper.GetAsync("DB:DBType", $"appsettings.json");
+                Console.WriteLine("异步Get:" + s1);
+                
 
-                List<Student> ls1 = await JsonFileHelper.GetListAsync<Student>("school:students", "appsettings2.json");
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls1));
-                Console.WriteLine("0--------------");
-                Console.ReadLine();
 
-                var s11 = JsonFileHelper.Get("DB:DBType", $"appsettings.json");
-                Console.WriteLine(s11);
+                //List<Student> ls1 = await JsonFileHelper.GetListAsync<Student>("school:students", "appsettings2.json");
+                //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls1));
+                //Console.WriteLine("0--------------");
+                //Console.ReadLine();
 
-                var s22 = JsonFileHelper.Get<int>("DB:DBNum", $"appsettings.json");
-                Console.WriteLine(s22);
+                //var s11 = JsonFileHelper.Get("DB:DBType", $"appsettings.json");
+                //Console.WriteLine(s11);
 
-                List<Student> ls11 = JsonFileHelper.GetList<Student>("school:students", "appsettings.json");
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls11));
+                //var s22 = JsonFileHelper.Get<int>("DB:DBNum", $"appsettings.json");
+                //Console.WriteLine(s22);
+
+                //List<Student> ls11 = JsonFileHelper.GetList<Student>("school:students", "appsettings.json");
+                //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(ls11));
+
+
                 Console.WriteLine("!--------------------------------------");
+                Console.ReadLine();
             }
         }
         class Student
