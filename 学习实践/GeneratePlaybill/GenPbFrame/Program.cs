@@ -18,10 +18,22 @@ namespace GenPbFrame
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Starting Main");
+            int maxSequence = 2;
+            int _sequence = 2;
+
+            _sequence = (_sequence + 1) & maxSequence;
+            Console.WriteLine("Starting Main " + (15 & 15));
+            Console.WriteLine("Starting Main " + (16 & 15));
+            Console.WriteLine("Starting Main " + (17 & 15));
+            Console.WriteLine("Starting Main " + (14 & 15));
+            Console.WriteLine("Starting Main " + (13 & 15));
+
+            Console.WriteLine("Starting Main " + (-1L ^ (-1L << 42)));
+            while (true) Console.ReadKey();
+            return;
             //var s = StaticSingleton.Instance;
             //Console.WriteLine(s.Id);
-            
+
 
             StaticSingleton.Hello();
 
