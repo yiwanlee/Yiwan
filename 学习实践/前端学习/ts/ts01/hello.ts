@@ -1,11 +1,9 @@
-interface Person {
-    name: string;
-    age?: number;
-    [propName: string]: string;
+function buildName(firstName: string, lastName: string = 'Tom') {
+    return firstName + ' ' + lastName;
 }
+let tomcat = buildName('Tom', 'Cat');
+let cat = buildName('Cat', undefined);
 
-let tom: Person = {
-    name: 'Tom',
-    age: 25,
-    gender: 'male'
-};
+console.log(tomcat);
+
+console.log(cat);
