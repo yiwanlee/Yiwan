@@ -351,3 +351,24 @@ MigrationBackup/
 
 # 微信小程序
 # project.config.json
+
+# 前端开发
+.DS_Store
+node_modules
+#/dist
+# 前端开发 local env files
+.env.local
+.env.*.local
+# 前端开发 Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 前端开发 Editor directories and files
+.idea
+.vscode
+# *.suo
+*.ntvs*
+*.njsproj
+# *.sln
+*.sw?
