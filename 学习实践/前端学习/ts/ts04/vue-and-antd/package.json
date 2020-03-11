@@ -1,5 +1,5 @@
 {
-  "name": "testvue",
+  "name": "vue-and-antd",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -26,12 +26,13 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/strongly-recommended",
+      "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
-    }
+    },
+    "rules": {}
   },
   "browserslist": [
     "> 1%",
