@@ -1,32 +1,12 @@
 <template>
   <a-layout id="basic_layout">
-    <a-layout-sider :trigger="null" collapsible v-model="collapsed">
-      <div class="logo" style="color:#fff;text-align:center;font-size:14px;">
-        企鹅团队协作系统
-      </div>
-      <a-menu
-        theme="dark"
-        mode="inline"
-        :defaultSelectedKeys="['1']"
-        :inlineCollapsed="collapsed"
-      >
-        <template v-for="item in list">
-          <a-menu-item v-if="!item.children" :key="item.key">
-            <a-icon type="pie-chart" />
-            <span>{{ item.title }}</span>
-          </a-menu-item>
-          <a-sub-menu v-else :key="item.key">
-            <span slot="title"><a-icon type="user" />{{ item.title }}</span>
-            <template v-for="item2 in item.children">
-              <a-menu-item :key="item2.key">
-                <a-icon type="pie-chart" />
-                <span>{{ item2.title }}</span>
-              </a-menu-item>
-            </template>
-          </a-sub-menu>
-        </template>
-      </a-menu>
-    </a-layout-sider>
+    <SideMenu
+      theme="dark"
+      mode="inline"
+      :collapsed="collapsed"
+      :collapsible="true"
+      @menuSelect="menuSelect"
+    />
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <a-icon
@@ -51,27 +31,14 @@
 </template>
 
 <script>
-const data = [
-  {
-    key: "1",
-    title: "首页"
-  },
-  {
-    key: "11",
-    title: "产品部"
-  }
-];
-
+import SideMenu from "../components/SideMenu";
 export default {
   data() {
     return {
-      collapsed: false,
-      list: data
+      collapsed: false
     };
   },
-  components: {
-    //Layout
-  },
+  components: { SideMenu },
   mounted() {
     this.$axios
       .get("index.html", {
@@ -105,8 +72,21 @@ export default {
 }
 
 #basic_layout .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+  height: 64px;
+  background: #002140;
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  line-height: 64px;
+  background: #002140;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 20px !important;
+  color: #fff;
+  font-weight: 600;
 }
 </style>
